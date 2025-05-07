@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz de Economia e Política</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .quiz-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            max-width: 600px;
+        }
+        .question {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+        }
+        .options button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            font-size: 1.2em;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        .options button:hover {
+            background-color: #45a049;
+        }
+        .options {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 1.2em;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<div class="quiz-container">
+    <div id="quiz"></div>
+    <div id="result" class="result"></div>
+</div>
+<script>
+    const quizData = [
+    { question: "1. O que é a economia?", options: ["A produção e distribuição de bens e serviços", "A administração de empresas", "A criação de leis", "A política externa"], answer: 0 },
+    { question: "2. O que é um mercado livre?", options: ["Onde a oferta e a demanda determinam os preços", "Onde o governo controla os preços", "Onde a troca de bens é proibida", "Onde só empresas públicas podem atuar"], answer: 0 },
+    { question: "3. O que é a inflação?", options: ["Aumento geral e contínuo dos preços", "Diminuição da produção de bens", "Crescimento do mercado financeiro", "Redução do poder de compra da moeda"], answer: 0 },
+    { question: "4. O que é a taxa de juros?", options: ["A porcentagem que se paga ao tomar dinheiro emprestado", "O preço de um bem no mercado", "A soma de todos os impostos de um país", "A quantidade de dinheiro que se paga para importar bens"], answer: 0 },
+    { question: "5. O que é o PIB?", options: ["Produto Interno Bruto", "Produto Industrial Brasileiro", "Preço Interno Bruto", "Poder Interno de Banco"], answer: 0 },
+    { question: "6. O que é a balança comercial?", options: ["A diferença entre exportações e importações", "O total de dinheiro de um país", "A taxa de crescimento de um mercado", "A relação entre consumidores e produtores"], answer: 0 },
+    { question: "7. O que é o setor terciário da economia?", options: ["Serviços como saúde, educação e comércio", "A produção de alimentos", "A extração de recursos naturais", "A fabricação de bens de consumo"], answer: 0 },
+    { question: "8. O que significa recessão econômica?", options: ["Quando há uma queda significativa na atividade econômica", "Quando a inflação aumenta muito", "Quando os preços dos bens caem drasticamente", "Quando o governo reduz os impostos"], answer: 0 },
+    { question: "9. O que é a dívida pública?", options: ["O total de dinheiro que o governo deve", "O dinheiro que os cidadãos têm que pagar em impostos", "O custo de produção de bens no país", "O valor que o setor privado deve ao governo"], answer: 0 },
+    { question: "10. O que é a política fiscal?", options: ["Uso do orçamento público para influenciar a economia", "Controle das taxas de juros pelo governo", "Regulação do mercado de trabalho", "Impostos sobre a produção de bens"], answer: 0 },
+    { question: "11. O que é o custo de oportunidade?", options: ["O valor do que se perde ao escolher uma alternativa", "O valor do investimento inicial", "O preço de mercado", "O benefício de escolher a alternativa mais cara"], answer: 0 },
+    { question: "12. O que é uma política de austeridade?", options: ["Medidas para reduzir gastos públicos e déficits", "Aumento dos gastos públicos", "Expansão da moeda", "Redução da taxa de juros"], answer: 0 },
+    { question: "13. O que é o setor primário da economia?", options: ["Produção de matérias-primas", "Indústria e manufatura", "Serviços financeiros", "Tecnologia da informação"], answer: 0 },
+    { question: "14. O que é a política monetária expansionista?", options: ["Aumento da oferta de moeda para estimular a economia", "Redução da oferta de moeda para combater a inflação", "Controle dos preços de bens", "Estímulo à concorrência"], answer: 0 },
+    { question: "15. O que é a taxa de câmbio?", options: ["A relação entre a moeda de um país e a de outro país", "A taxa de juros do mercado financeiro", "O valor da moeda nacional", "O preço de bens e serviços no mercado internacional"], answer: 0 },
+    { question: "16. O que é o PIB per capita?", options: ["Produto Interno Bruto dividido pela população", "Produto total do setor primário", "Produto total do setor secundário", "Valor total das exportações"], answer: 0 },
+    { question: "17. O que caracteriza a economia mista?", options: ["Combinação de mercado livre e intervenção estatal", "Mercado totalmente controlado pelo governo", "Mercado totalmente privado", "Mercado sem controle de preços"], answer: 0 },
+    { question: "18. O que é a política de subsídios?", options: ["Apoio financeiro do governo para empresas ou setores", "Controle de preços pelo governo", "Taxação de exportações", "Controle da oferta de moeda"], answer: 0 },
+    { question: "19. O que são as externalidades?", options: ["Efeitos colaterais de atividades econômicas sobre terceiros", "Ações do governo para controlar a inflação", "Importações e exportações", "Investimentos em infraestrutura"], answer: 0 },
+    { question: "20. O que é o mercado de trabalho informal?", options: ["Trabalho sem vínculo formal com a empresa", "Trabalho com contrato temporário", "Trabalho no setor público", "Trabalho com benefícios sociais"], answer: 0 },
+    // Continue com o resto das 50 perguntas aqui...
+    { question: "21. O que é uma crise fiscal?", options: ["Quando o governo gasta mais do que arrecada", "Quando há aumento na produção", "Quando o governo reduz os impostos", "Quando o mercado de ações tem alta"], answer: 0 },
+    { question: "22. O que é uma reforma tributária?", options: ["Mudança nas regras de cobrança de impostos", "Mudança na quantidade de exportações", "Mudança nos preços dos bens", "Mudança na quantidade de dinheiro circulante"], answer: 0 },
+    { question: "23. O que caracteriza uma economia planificada?", options: ["Controle centralizado da produção e distribuição", "Mercado livre", "Propriedade privada", "Concorrência entre empresas"], answer: 0 },
+    { question: "24. O que são as políticas monetárias?", options: ["Ações do banco central para controlar a oferta de moeda e as taxas de juros", "Controle dos preços de mercado", "Controle das exportações", "Controle do mercado de trabalho"], answer: 0 },
+    { question: "25. O que é o mercado cambial?", options: ["Onde se compram e vendem moedas de diferentes países", "Onde se compram bens e serviços", "Onde se compram ações", "Onde se realizam investimentos em imóveis"], answer: 0 },
+    { question: "26. O que é uma sociedade anônima?", options: ["Uma empresa cujas ações podem ser compradas e vendidas no mercado", "Uma empresa com fins sociais", "Uma empresa governamental", "Uma empresa sem fins lucrativos"], answer: 0 },
+    { question: "27. O que é um mercado monopolista?", options: ["Mercado dominado por uma única empresa", "Mercado com muitas pequenas empresas", "Mercado com livre concorrência", "Mercado onde as empresas não podem influenciar os preços"], answer: 0 },
+    { question: "28. O que é a taxa de juros?", options: ["Custo do empréstimo de dinheiro", "Valor total de bens produzidos", "Valor de exportações", "Valor de importações"], answer: 0 },
+    { question: "29. O que é o custo de oportunidade?", options: ["O valor do que se abre mão ao fazer uma escolha", "O valor de um bem no mercado", "O valor dos impostos", "O valor das exportações"], answer: 0 },
+    { question: "30. O que é uma taxa de desemprego elevada?", options: ["Quando uma grande parte da população está sem trabalho", "Quando o mercado de ações cresce rapidamente", "Quando a inflação diminui", "Quando as exportações aumentam"], answer: 0 },
+    { question: "31. O que são os direitos de propriedade intelectual?", options: ["Direitos sobre criações da mente, como invenções e obras", "Direitos sobre bens materiais", "Direitos sobre terras", "Direitos sobre a produção de bens"], answer: 0 },
+    { question: "32. O que é a teoria do valor trabalho?", options: ["Valor dos bens é determinado pelo trabalho necessário para produzi-los", "Valor dos bens é determinado pela demanda", "Valor dos bens é determinado pelos preços no mercado", "Valor dos bens é determinado pelos custos de produção"], answer: 0 },
+    { question: "33. O que caracteriza a economia mista?", options: ["Combinação de elementos do capitalismo e do socialismo", "Economia completamente controlada pelo governo", "Economia completamente livre de intervenção do governo", "Economia sem mercados financeiros"], answer: 0 },
+    { question: "34. O que é a balança comercial?", options: ["A diferença entre as exportações e importações de um país", "A quantidade de bens produzidos", "O valor das ações de empresas", "A taxa de câmbio entre moedas"], answer: 0 },
+    { question: "35. O que é o salário mínimo?", options: ["Valor mínimo pago por um empregador ao trabalhador", "Valor médio pago aos trabalhadores", "Valor máximo que um trabalhador pode receber", "Valor de uma hora trabalhada"], answer: 0 },
+    { question: "36. O que é a economia informal?", options: ["Atividades econômicas não regulamentadas pelo governo", "Atividades econômicas que dependem do governo", "Atividades econômicas relacionadas ao comércio exterior", "Atividades de empresas grandes"], answer: 0 },
+    { question: "37. O que é o mercado competitivo?", options: ["Mercado com muitas empresas competindo entre si", "Mercado com uma única empresa controlando o preço", "Mercado onde o governo controla os preços", "Mercado sem nenhuma concorrência"], answer: 0 },
+    { question: "38. O que é o crescimento econômico?", options: ["Aumento da produção de bens e serviços", "Aumento no valor das ações", "Aumento nas exportações", "Aumento nos impostos"], answer: 0 },
+    { question: "39. O que é uma política de austeridade?", options: ["Política que visa reduzir os gastos públicos", "Política que visa aumentar os gastos públicos", "Política que aumenta a quantidade de moeda em circulação", "Política que favorece o crescimento das exportações"], answer: 0 },
+    { question: "40. O que são subsídios?", options: ["Pagamentos do governo para reduzir custos de produção", "Impostos sobre produtos importados", "Impostos sobre produtos vendidos no mercado interno", "Pagamentos de exportações"], answer: 0 },
+    { question: "41. O que é uma política de desvalorização?", options: ["Redução do valor da moeda de um país", "Aumento do valor da moeda de um país", "Aumento da quantidade de moeda em circulação", "Redução das taxas de juros"], answer: 0 },
+    { question: "42. O que caracteriza a economia de escala?", options: ["Diminuição do custo unitário à medida que a produção aumenta", "Aumento do custo unitário à medida que a produção aumenta", "Diminuição do volume de produção", "Aumento no número de empresas no mercado"], answer: 0 },
+    { question: "43. O que é o mercado de crédito?", options: ["Onde são oferecidos empréstimos e financiamentos", "Onde se compram e vendem ações", "Onde se compram e vendem moedas estrangeiras", "Onde se compram bens"], answer: 0 },
+    { question: "44. O que é uma inflação de demanda?", options: ["Inflação causada pelo aumento da demanda por bens e serviços", "Inflação causada pela redução da oferta de bens e serviços", "Inflação causada por políticas monetárias", "Inflação causada pela importação de produtos"], answer: 0 },
+    { question: "45. O que é uma política cambial?", options: ["Ajustes nas taxas de câmbio", "Ajustes nas taxas de juros", "Ajustes nas taxas de impostos", "Ajustes nas taxas de produção"], answer: 0 },
+    { question: "46. O que são investimentos estrangeiros?", options: ["Investimentos realizados por empresas ou indivíduos de outros países", "Investimentos realizados apenas dentro do país", "Investimentos apenas no mercado imobiliário", "Investimentos em mercados financeiros locais"], answer: 0 },
+    { question: "47. O que é o papel do Banco Central?", options: ["Controlar a política monetária e as taxas de juros", "Gerenciar a produção de bens", "Controlar as importações", "Controlar os preços dos produtos"], answer: 0 },
+    { question: "48. O que caracteriza o ciclo econômico?", options: ["Flutuações na produção e no emprego ao longo do tempo", "Estabilidade na produção e no emprego", "Aumento da produção sem mudanças no emprego", "Desaceleração no crescimento econômico"], answer: 0 },
+    { question: "49. O que é a curva de Phillips?", options: ["Relação inversa entre inflação e desemprego", "Relação direta entre produção e consumo", "Relação entre impostos e investimentos", "Relação entre exportações e importações"], answer: 0 },
+    { question: "50. O que é a teoria da vantagem comparativa?", options: ["Teoria que defende que os países devem se especializar nos bens que produzem com menor custo de oportunidade", "Teoria que defende que os países devem ser autossuficientes", "Teoria que defende que os países devem produzir todos os bens necessários", "Teoria que defende o controle das exportações"], answer: 0 }
+        // (continue aqui com suas outras perguntas)
+    ];
+    
+    const quiz = document.getElementById('quiz');
+    const result = document.getElementById('result');
+    
+    let currentQuestion = 0;
+    
+    function loadQuiz() {
+        result.innerHTML = ''; // Limpa o resultado anterior
+        const currentQuizData = quizData[currentQuestion];
+        quiz.innerHTML = `
+            <div class="question">${currentQuizData.question}</div>
+            <div class="options">
+                ${currentQuizData.options.map((option, index) => `
+                    <button onclick="checkAnswer(${index})">${option}</button>
+                `).join('')}
+            </div>
+        `;
+    }
+    
+    function checkAnswer(selected) {
+        const correct = quizData[currentQuestion].answer;
+        if (selected === correct) {
+            result.innerHTML = '<span style="color: green;">✅ Resposta correta!</span>';
+        } else {
+            result.innerHTML = '<span style="color: red;">❌ Resposta errada!</span>';
+        }
+    
+        setTimeout(() => {
+            currentQuestion++;
+            if (currentQuestion < quizData.length) {
+                loadQuiz();
+            } else {
+                quiz.innerHTML = '<h2>Quiz concluído!</h2>';
+                result.innerHTML = '';
+            }
+        }, 1000); // Espera 1 segundo para mostrar a próxima pergunta
+    }
+    
+    loadQuiz();
+    </script>
+    

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz sobre Sustentabilidade</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+        }
+        .quiz-container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .question {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        .options {
+            list-style: none;
+            padding: 0;
+        }
+        .options li {
+            background-color: #007BFF;
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            color: white;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        .options li:hover {
+            background-color: #0056b3;
+        }
+        .result {
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+        .correct {
+            color: green;
+        }
+        .incorrect {
+            color: red;
+        }
+        .confetti {
+            display: none;
+            color: gold;
+            font-size: 30px;
+            margin-top: 20px;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="quiz-container">
+    <h1>Quiz sobre Sustentabilidade</h1>
+    <div class="question" id="question"></div>
+    <ul class="options" id="options"></ul>
+    <div class="result hidden" id="result"></div>
+    <div class="confetti" id="confetti">🎉 Confetes! 🎉</div>
+    <button onclick="nextQuestion()" id="next-button" class="hidden">Próxima Pergunta</button>
+</div>
+
+<script>
+    const quizData = [
+        { question: "O que é sustentabilidade?", options: ["Uso de recursos sem comprometer as gerações futuras", "Desperdício de recursos naturais", "Exclusão social e econômica", "Uso irrestrito de energia"], answer: "Uso de recursos sem comprometer as gerações futuras" },
+        { question: "Quais são os pilares da sustentabilidade?", options: ["Social, ambiental e econômico", "Político, econômico e tecnológico", "Educacional, social e ambiental", "Econômico, político e cultural"], answer: "Social, ambiental e econômico" },
+        { question: "O que é a economia circular?", options: ["Modelo de produção que busca reduzir o desperdício", "Modelo de produção que aumenta a produção de resíduos", "Modelo de consumo que visa o acúmulo de bens", "Modelo econômico que visa o crescimento rápido"], answer: "Modelo de produção que busca reduzir o desperdício" },
+        { question: "O que é a pegada de carbono?", options: ["Quantidade de CO2 gerado pela atividade humana", "Quantidade de oxigênio consumido por animais", "Quantidade de água utilizada por pessoa", "Quantidade de lixo gerado por dia"], answer: "Quantidade de CO2 gerado pela atividade humana" },
+        { question: "O que são energias renováveis?", options: ["Fontes de energia que não se esgotam", "Fontes de energia que dependem de combustíveis fósseis", "Fontes de energia que produzem poluição", "Fontes de energia caras e escassas"], answer: "Fontes de energia que não se esgotam" },
+        { question: "Quais esportes podem ser mais sustentáveis?", options: ["Esportes que utilizam menos recursos naturais", "Esportes com maior consumo de energia elétrica", "Esportes que geram mais resíduos plásticos", "Esportes que exigem transporte de longa distância"], answer: "Esportes que utilizam menos recursos naturais" },
+        { question: "Qual é o impacto ambiental do futebol?", options: ["Uso excessivo de energia e água, e produção de resíduos", "Não há impacto ambiental", "Uso de materiais recicláveis apenas", "Geração de energia renovável"], answer: "Uso excessivo de energia e água, e produção de resíduos" },
+        { question: "Como o ciclismo contribui para a sustentabilidade?", options: ["Reduz a emissão de poluentes e melhora a mobilidade urbana", "Aumenta o consumo de combustíveis fósseis", "Gera grandes quantidades de resíduos", "Utiliza equipamentos altamente poluentes"], answer: "Reduz a emissão de poluentes e melhora a mobilidade urbana" },
+        { question: "Qual esporte tem um impacto ambiental positivo?", options: ["Caminhadas e corridas", "Esportes com uso de grandes veículos", "Esportes aquáticos com consumo de plástico", "Atividades com uso intensivo de energia"], answer: "Caminhadas e corridas" },
+        { question: "O que é uma sede esportiva sustentável?", options: ["Instalação com baixo consumo de energia e uso responsável de recursos", "Estádio com alto consumo de energia e grandes quantidades de resíduos", "Sede esportiva com grande uso de combustíveis fósseis", "Estádio com uso intenso de materiais plásticos"], answer: "Instalação com baixo consumo de energia e uso responsável de recursos" },
+        { question: "Qual é a melhor forma de diminuir o desperdício no esporte?", options: ["Reduzir o uso de plásticos e promover a reciclagem", "Aumentar a quantidade de plástico utilizado em competições", "Usar mais energia elétrica para as competições", "Não preocupar com o uso de materiais recicláveis"], answer: "Reduzir o uso de plásticos e promover a reciclagem" },
+        { question: "Como a educação ambiental pode ser aplicada no esporte?", options: ["Promovendo práticas sustentáveis durante eventos esportivos", "Usando materiais descartáveis em eventos", "Organizando grandes eventos sem considerar o impacto ambiental", "Fomentando o uso excessivo de energia elétrica"], answer: "Promovendo práticas sustentáveis durante eventos esportivos" },
+        { question: "O que é o conceito de 'greenwashing' no esporte?", options: ["Quando uma organização finge ser ambientalmente responsável para melhorar sua imagem", "Quando um esporte adota práticas ecológicas reais", "Quando uma organização adota práticas verdadeiramente sustentáveis", "Quando uma empresa investe em sustentabilidade real"], answer: "Quando uma organização finge ser ambientalmente responsável para melhorar sua imagem" },
+        { question: "O que é uma dieta sustentável para atletas?", options: ["Dieta balanceada, com alimentos de baixo impacto ambiental", "Dieta com grandes quantidades de carne e alimentos processados", "Dieta que incentiva o consumo de alimentos de fast food", "Dieta baseada em alimentos com grandes impactos ambientais"], answer: "Dieta balanceada, com alimentos de baixo impacto ambiental" },
+        { question: "Como o uso de transporte sustentável pode impactar o esporte?", options: ["Reduzindo a emissão de gases de efeito estufa", "Aumentando a poluição no ambiente", "Consumindo mais combustível fóssil", "Gerando mais lixo e resíduos"], answer: "Reduzindo a emissão de gases de efeito estufa" },
+        { question: "Quais são as principais práticas sustentáveis nos eventos esportivos?", options: ["Uso de materiais recicláveis e redução de resíduos", "Uso de plásticos descartáveis e aumento do consumo de energia", "Desperdício de alimentos e uso excessivo de papel", "Não adotar nenhuma prática de reciclagem"], answer: "Uso de materiais recicláveis e redução de resíduos" },
+        { question: "Quais são os benefícios da sustentabilidade no esporte?", options: ["Redução do impacto ambiental e promoção de uma vida saudável", "Aumento do consumo de energia e água", "Redução da conscientização pública sobre o meio ambiente", "Aumento da geração de resíduos e desperdício de recursos"], answer: "Redução do impacto ambiental e promoção de uma vida saudável" },
+        { question: "Como a energia solar pode ser utilizada nos estádios?", options: ["Gerando energia limpa para as atividades esportivas", "Aumentando o consumo de energia elétrica convencional", "Reduzindo a eficiência do consumo de energia", "Usando mais combustíveis fósseis para gerar energia"], answer: "Gerando energia limpa para as atividades esportivas" },
+        { question: "O que são produtos ecológicos no esporte?", options: ["Produtos fabricados com materiais recicláveis e menos impactantes", "Produtos feitos com plásticos e materiais não recicláveis", "Produtos que geram mais resíduos", "Produtos que utilizam grandes quantidades de energia"], answer: "Produtos fabricados com materiais recicláveis e menos impactantes" },
+        { question: "Quais são as alternativas para reduzir o impacto ambiental do transporte esportivo?", options: ["Usar transporte público ou meios de transporte não poluentes", "Aumentar o uso de veículos particulares movidos a gasolina", "Desconsiderar o impacto ambiental", "Incentivar o uso de aviões para eventos esportivos"], answer: "Usar transporte público ou meios de transporte não poluentes" },
+        { question: "Qual a importância da sustentabilidade no esporte para as futuras gerações?", options: ["Garantir que os recursos naturais sejam preservados para as próximas gerações", "Aumentar o consumo de recursos naturais sem planejamento", "Diminuir a conscientização sobre o impacto ambiental", "Gerar mais lixo e desperdício para a sociedade"], answer: "Garantir que os recursos naturais sejam preservados para as próximas gerações" },
+        { question: "O que é um evento esportivo zero desperdício?", options: ["Evento onde todos os resíduos são reciclados ou compostados", "Evento que gera grandes quantidades de lixo e resíduos", "Evento que não utiliza reciclagem", "Evento que não se preocupa com a geração de resíduos"], answer: "Evento onde todos os resíduos são reciclados ou compostados" },
+        { question: "Como o uso de materiais reciclados beneficia o esporte?", options: ["Reduzindo o impacto ambiental e promovendo a economia circular", "Aumentando o uso de recursos naturais", "Gerando mais resíduos e poluição", "Aumentando o consumo de energia elétrica"], answer: "Reduzindo o impacto ambiental e promovendo a economia circular" },
+        { question: "O que é a certificação ambiental em eventos esportivos?", options: ["Reconhecimento pela implementação de práticas sustentáveis", "Permissão para gerar grandes quantidades de resíduos", "Incentivo para o aumento de consumo de energia", "Aumento do uso de plásticos e produtos não recicláveis"], answer: "Reconhecimento pela implementação de práticas sustentáveis" }
+    ];
+
+    let currentQuestionIndex = 0;
+
+    function shuffle(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]]; // troca os elementos
+        }
+    }
+
+    function displayQuestion() {
+        const question = quizData[currentQuestionIndex];
+        document.getElementById("question").textContent = question.question;
+
+        const optionsList = document.getElementById("options");
+        optionsList.innerHTML = "";
+
+        const options = [...question.options];
+        shuffle(options);
+
+        options.forEach(option => {
+            const li = document.createElement("li");
+            li.textContent = option;
+            li.onclick = () => checkAnswer(option);
+            optionsList.appendChild(li);
+        });
+    }
+
+    function checkAnswer(selectedAnswer) {
+        const question = quizData[currentQuestionIndex];
+        const result = document.getElementById("result");
+
+        if (selectedAnswer === question.answer) {
+            result.textContent = "Você acertou!";
+            result.classList.remove("incorrect");
+            result.classList.add("correct");
+            document.getElementById("confetti").style.display = "block";
+        } else {
+            result.textContent = "Você errou! Tente novamente.";
+            result.classList.remove("correct");
+            result.classList.add("incorrect");
+        }
+
+        document.getElementById("next-button").classList.remove("hidden");
+    }
+
+    function nextQuestion() {
+        currentQuestionIndex++;
+        if (currentQuestionIndex < quizData.length) {
+            displayQuestion();
+            document.getElementById("next-button").classList.add("hidden");
+            document.getElementById("result").classList.add("hidden");
+            document.getElementById("confetti").style.display = "none";
+        } else {
+            document.getElementById("result").textContent = "Você completou o quiz!";
+            document.getElementById("result").classList.remove("hidden");
+            document.getElementById("next-button").classList.add("hidden");
+        }
+    }
+
+    displayQuestion();
+</script>
+
+</body>
+</html>

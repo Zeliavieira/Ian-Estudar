@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resumo Escolar</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f0f5;
+      margin: 0;
+      padding: 20px;
+    }
+    header {
+      background: #4CAF50;
+      padding: 10px;
+      text-align: center;
+      color: white;
+      font-size: 24px;
+      border-radius: 8px;
+    }
+    .content {
+      margin-top: 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 15px;
+    }
+    .card {
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .card:hover {
+      transform: scale(1.05);
+    }
+    .hidden {
+      display: none;
+      margin-top: 10px;
+    }
+    .card p {
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+<header>Resumo Escolar Completo</header>
+
+<div class="content" id="content">
+  <!-- As áreas de estudo serão inseridas aqui pelo JavaScript -->
+</div>
+<a href="HISTORIA.html" target="_blank">
+    <button>História</button>
+
+    <a href="GEOGRAFIAA.HTML" target="_blank">
+        <button>Geografia</button>
+
+        <a href="PORTUGUES.HTML" target="_blank">
+            <button>Português</button>
+
+            <a href="Ingles.html" target="_blank">
+                <button>Ingles</button>
+
+                <a href="educação fisica.html" target="_blank">
+                    <button>Educação Fisica</button>
+
+                    <a href="artes.html" target="_blank">
+                        <button>Artes</button>
+
+                        <a href="ciencias.html" target="_blank">
+                            <button>Ciencias</button>
+
+                            <a href="matematica.html" target="_blank">
+                                <button>Matematica</button>
+
+<script>
+const temas = [
+  // PORTUGUÊS
+  {titulo: "Variação Linguística", texto: "Mudança da língua conforme a época, lugar ou grupo social."},
+  {titulo: "Variação Geográfica", texto: "Mudança da língua conforme a região onde a pessoa vive."},
+  {titulo: "Concordância Verbal", texto: "O verbo precisa concordar em número e pessoa com o sujeito."},
+  {titulo: "Argumentação", texto: "Uso de ideias e provas para defender uma opinião."},
+  {titulo: "Transitividade Verbal", texto: "Como o verbo se liga ao complemento."},
+
+  // MATEMÁTICA
+  {titulo: "Potenciação", texto: "Multiplicação repetida de um número por ele mesmo."},
+  {titulo: "Notação Científica", texto: "Forma prática de escrever números grandes ou pequenos."},
+  {titulo: "Raiz Enésima", texto: "Número que, multiplicado por ele mesmo várias vezes, gera o valor inicial."},
+  {titulo: "Radiciação", texto: "Operação para encontrar a raiz de um número."},
+  {titulo: "Porcentagem", texto: "Parte de 100."},
+
+  // CIÊNCIAS
+  {titulo: "Aspectos da Ciência e do Universo", texto: "Estudo das leis naturais e do espaço."},
+  {titulo: "Sistema Solar", texto: "Conjunto de planetas e o Sol."},
+  {titulo: "Astrologia x Astronomia x Astrobiologia", texto: "Astronomia é ciência; astrologia é crença; astrobiologia estuda vida no espaço."},
+  {titulo: "Evolução das Estrelas", texto: "Ciclo de vida das estrelas."},
+
+  // GEOGRAFIA
+  {titulo: "Globalização", texto: "Integração econômica e cultural entre países."},
+  {titulo: "Capitalismo", texto: "Sistema econômico baseado no lucro e propriedade privada."},
+  {titulo: "Mundialização", texto: "Expansão das atividades econômicas pelo mundo."},
+
+  // HISTÓRIA
+  {titulo: "Primeira Guerra Mundial", texto: "Conflito entre grandes potências de 1914 a 1918."},
+  {titulo: "Revolução Russa", texto: "Queda do czarismo e criação do comunismo na Rússia."},
+  {titulo: "Primeira República", texto: "Primeiro período republicano no Brasil (1889-1930)."},
+  {titulo: "Crises Capitalistas", texto: "Momentos de dificuldade econômica no capitalismo."},
+  {titulo: "Totalitarismo", texto: "Regime político onde o governo controla tudo."},
+
+  // ARTES
+  {titulo: "Cores Primárias", texto: "Vermelho, azul e amarelo."},
+  {titulo: "Cores Secundárias", texto: "Mistura das cores primárias."},
+  {titulo: "Cores Quentes, Frias e Naturais", texto: "Sensação de calor, frio ou elementos da natureza."},
+  {titulo: "Monocromia", texto: "Arte com variações de uma só cor."},
+  {titulo: "Policromia", texto: "Arte com várias cores."},
+
+  // EDUCAÇÃO FÍSICA
+  {titulo: "Sustentabilidade", texto: "Uso consciente dos recursos naturais."},
+  {titulo: "Sustentabilidade no Esporte", texto: "Práticas esportivas que respeitam o meio ambiente."},
+
+  // INGLÊS
+  {titulo: "Verb To Be", texto: "Verbo ser/estar."},
+  {titulo: "Verbs", texto: "Ações (run, eat, speak)."},
+  {titulo: "Simple Present", texto: "Ações habituais (I study)."},
+  {titulo: "Linking Words", texto: "Palavras que conectam frases (and, but, because)."},
+  {titulo: "Your Turn", texto: "Hora de praticar."},
+  {titulo: "Present Continuous", texto: "Ações que estão acontecendo agora (I am studying)."},
+  {titulo: "Days of the Week", texto: "Dias da semana em inglês."}
+];
+
+const container = document.getElementById('content');
+
+temas.forEach((tema, index) => {
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.innerHTML = `<strong>${tema.titulo}</strong><p class=\"hidden\" id=\"texto-${index}\">${tema.texto}</p>`;
+  card.onclick = () => {
+    const texto = document.getElementById(`texto-${index}`);
+    texto.classList.toggle('hidden');
+  };
+  container.appendChild(card);
+});
+</script>
+
+</body>
+</html>

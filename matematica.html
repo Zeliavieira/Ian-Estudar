@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Matemática</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .quiz-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            width: 350px;
+            text-align: center;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #next-button {
+            background-color: #008CBA;
+        }
+        #next-button:hover {
+            background-color: #007B9E;
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+        .answers button {
+            display: block;
+            margin: 10px auto;
+        }
+    </style>
+</head>
+<body>
+
+<div class="quiz-container">
+    <h1>Quiz de Matemática</h1>
+    <div class="question-container">
+        <p id="question">Pergunta 1</p>
+        <div class="answers">
+            <button onclick="checkAnswer('a')">Resposta A</button>
+            <button onclick="checkAnswer('b')">Resposta B</button>
+            <button onclick="checkAnswer('c')">Resposta C</button>
+            <button onclick="checkAnswer('d')">Resposta D</button>
+        </div>
+    </div>
+    <div id="result"></div>
+    <button id="next-button" onclick="nextQuestion()" style="display:none;">Próxima Pergunta</button>
+</div>
+
+<script>
+const questions = [
+    // POTENCIAÇÃO
+    { question: "Quanto é 2³?", answers: ["6", "8", "9", "12"], correct: "b" },
+    { question: "Quanto é 5²?", answers: ["10", "20", "25", "30"], correct: "c" },
+    { question: "Quanto é 3⁴?", answers: ["81", "27", "64", "243"], correct: "a" },
+    { question: "Quanto é 6²?", answers: ["12", "36", "18", "24"], correct: "b" },
+    { question: "Quanto é 4³?", answers: ["64", "16", "32", "48"], correct: "a" },
+    { question: "Quanto é 7²?", answers: ["14", "49", "21", "35"], correct: "b" },
+    { question: "Quanto é 10³?", answers: ["1000", "100", "10", "10000"], correct: "a" },
+    { question: "Quanto é 8²?", answers: ["64", "32", "16", "48"], correct: "a" },
+    { question: "Quanto é 9²?", answers: ["81", "72", "90", "99"], correct: "a" },
+    { question: "Quanto é 2⁵?", answers: ["32", "16", "64", "48"], correct: "a" },
+
+    // NOTAÇÃO CIENTÍFICA
+    { question: "1.000.000 em notação científica é:", answers: ["1x10²", "1x10⁴", "1x10⁶", "1x10³"], correct: "c" },
+    { question: "0,0001 em notação científica é:", answers: ["1x10⁻²", "1x10⁻⁴", "1x10⁻³", "1x10⁻⁶"], correct: "b" },
+    { question: "5.6x10³ equivale a:", answers: ["560", "5600", "56", "56000"], correct: "b" },
+    { question: "3x10⁻² equivale a:", answers: ["0,3", "0,03", "0,003", "3"], correct: "b" },
+    { question: "4x10⁴ equivale a:", answers: ["4000", "40000", "400", "4"], correct: "b" },
+    { question: "7.2x10⁻³ equivale a:", answers: ["0,072", "0,0072", "0,00072", "0,72"], correct: "b" },
+    { question: "2.5x10² equivale a:", answers: ["25", "250", "2,5", "2500"], correct: "b" },
+    { question: "9x10⁰ equivale a:", answers: ["9", "90", "0,9", "0,09"], correct: "a" },
+    { question: "6x10⁻¹ equivale a:", answers: ["0,6", "6", "0,06", "0,006"], correct: "a" },
+    { question: "8.1x10² equivale a:", answers: ["810", "81", "8,1", "8100"], correct: "a" },
+
+    // RAIZ ENÉSIMA
+    { question: "√16 é:", answers: ["2", "4", "8", "16"], correct: "b" },
+    { question: "√25 é:", answers: ["3", "5", "6", "7"], correct: "b" },
+    { question: "³√27 é:", answers: ["2", "3", "6", "9"], correct: "b" },
+    { question: "√81 é:", answers: ["8", "9", "7", "6"], correct: "b" },
+    { question: "³√8 é:", answers: ["2", "4", "8", "6"], correct: "a" },
+    { question: "√49 é:", answers: ["6", "7", "8", "9"], correct: "b" },
+    { question: "³√64 é:", answers: ["3", "4", "5", "6"], correct: "b" },
+    { question: "⁴√16 é:", answers: ["2", "4", "8", "16"], correct: "a" },
+    { question: "√100 é:", answers: ["10", "20", "5", "50"], correct: "a" },
+    { question: "³√125 é:", answers: ["4", "5", "6", "7"], correct: "b" },
+
+    // RADICIAÇÃO
+    { question: "√36 é:", answers: ["5", "6", "7", "8"], correct: "b" },
+    { question: "³√8 é:", answers: ["2", "3", "4", "6"], correct: "a" },
+    { question: "√121 é:", answers: ["9", "10", "11", "12"], correct: "c" },
+    { question: "³√27 é:", answers: ["2", "3", "4", "5"], correct: "b" },
+    { question: "√9 é:", answers: ["2", "3", "4", "5"], correct: "b" },
+    { question: "⁴√81 é:", answers: ["3", "6", "9", "4"], correct: "a" },
+    { question: "√144 é:", answers: ["10", "12", "14", "16"], correct: "b" },
+    { question: "³√64 é:", answers: ["3", "4", "5", "6"], correct: "b" },
+    { question: "√169 é:", answers: ["12", "13", "14", "15"], correct: "b" },
+    { question: "³√8 é:", answers: ["1", "2", "3", "4"], correct: "b" },
+
+    // PORCENTAGEM
+    { question: "50% de 200 é:", answers: ["50", "100", "150", "200"], correct: "b" },
+    { question: "25% de 80 é:", answers: ["10", "15", "20", "25"], correct: "c" },
+    { question: "10% de 500 é:", answers: ["5", "10", "50", "100"], correct: "c" },
+    { question: "75% de 400 é:", answers: ["100", "200", "300", "400"], correct: "c" },
+    { question: "20% de 150 é:", answers: ["20", "30", "40", "50"], correct: "b" },
+    { question: "30% de 90 é:", answers: ["27", "30", "33", "36"], correct: "a" },
+    { question: "60% de 50 é:", answers: ["20", "25", "30", "35"], correct: "c" },
+    { question: "15% de 200 é:", answers: ["20", "25", "30", "35"], correct: "c" },
+    { question: "5% de 1000 é:", answers: ["50", "100", "500", "5"], correct: "a" },
+    { question: "40% de 150 é:", answers: ["40", "60", "70", "80"], correct: "b" }
+];
+
+let currentQuestion = 0;
+let score = 0;
+
+function showQuestion() {
+    const questionData = questions[currentQuestion];
+    document.getElementById('question').innerText = questionData.question;
+    const buttons = document.querySelectorAll('.answers button');
+    buttons[0].innerText = questionData.answers[0];
+    buttons[1].innerText = questionData.answers[1];
+    buttons[2].innerText = questionData.answers[2];
+    buttons[3].innerText = questionData.answers[3];
+}
+
+function checkAnswer(selected) {
+    const questionData = questions[currentQuestion];
+    const result = document.getElementById('result');
+    
+    if (selected === questionData.correct) {
+        result.innerHTML = 'Você acertou! 🎉';
+        score++;
+    } else {
+        result.innerHTML = 'Você errou! 😞';
+    }
+
+    document.getElementById('next-button').style.display = 'block';
+}
+
+function nextQuestion() {
+    currentQuestion++;
+
+    if (currentQuestion < questions.length) {
+        showQuestion();
+        document.getElementById('result').innerHTML = '';
+        document.getElementById('next-button').style.display = 'none';
+    } else {
+        document.getElementById('result').innerHTML = `Fim do quiz! Seu score: ${score} de ${questions.length}`;
+        document.getElementById('next-button').style.display = 'none';
+    }
+}
+
+showQuestion();
+</script>
+
+</body>
+</html>

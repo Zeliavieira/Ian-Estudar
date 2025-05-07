@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz de Inglês</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .quiz-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            text-align: center;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            margin: 5px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #next-button {
+            background-color: #008CBA;
+        }
+
+        #next-button:hover {
+            background-color: #007B9E;
+        }
+
+        #result {
+            margin-top: 20px;
+        }
+
+        .answers button {
+            display: block;
+            margin: 10px auto;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="quiz-container">
+        <h1>Quiz de Inglês</h1>
+        <div class="question-container">
+            <p id="question">Pergunta 1</p>
+            <div class="answers">
+                <button onclick="checkAnswer('a')">Resposta A</button>
+                <button onclick="checkAnswer('b')">Resposta B</button>
+                <button onclick="checkAnswer('c')">Resposta C</button>
+                <button onclick="checkAnswer('d')">Resposta D</button>
+            </div>
+        </div>
+        <div id="result"></div>
+        <button id="next-button" onclick="nextQuestion()" style="display:none;">Próxima Pergunta</button>
+    </div>
+
+    <script>
+        const questions = [
+            { question: "What is the verb 'to be' in the sentence: 'She is a teacher.'?", answers: ["is", "am", "are", "be"], correct: "a" },
+            { question: "Which one is the correct form of the verb 'to be' for 'I'?", answers: ["am", "is", "are", "be"], correct: "a" },
+            { question: "What is the correct answer? 'They ___ happy.'", answers: ["is", "am", "are", "be"], correct: "c" },
+            { question: "Which word is a linking word?", answers: ["but", "dog", "jump", "cat"], correct: "a" },
+            { question: "What is the simple present form of 'he'?", answers: ["he run", "he runs", "he running", "he is run"], correct: "b" },
+            { question: "Choose the correct sentence in Present Continuous: 'She ____ reading a book.'", answers: ["is", "are", "am", "be"], correct: "a" },
+            { question: "Which is a linking word for contrast?", answers: ["but", "and", "because", "so"], correct: "a" },
+            { question: "What is the correct form of 'be' for 'she'?", answers: ["am", "is", "are", "be"], correct: "b" },
+            { question: "Which one of these is used to talk about routines in the Simple Present?", answers: ["I am doing", "I will do", "I do", "I have done"], correct: "c" },
+            { question: "Which is the correct form of the verb 'to be' for 'he'?", answers: ["is", "am", "are", "be"], correct: "a" },
+            { question: "When do you use the present continuous?", answers: ["for actions happening now", "for habits", "for future plans", "for routines"], correct: "a" },
+            { question: "What is the present continuous form of 'I eat'?", answers: ["I ate", "I eats", "I am eating", "I eating"], correct: "c" },
+            { question: "What is the correct form of 'be' for 'he'?", answers: ["am", "is", "are", "be"], correct: "b" },
+            { question: "Which word connects the two parts of this sentence: 'I studied hard, so I passed the exam.'?", answers: ["and", "but", "because", "so"], correct: "d" },
+            { question: "What is the correct verb form for 'we' in Simple Present?", answers: ["we is", "we are", "we am", "we do"], correct: "b" },
+            { question: "What time of the day is it if it's morning?", answers: ["Monday", "Afternoon", "Sunday", "Morning"], correct: "d" },
+            { question: "Choose the correct answer: 'You ___ a good singer.'", answers: ["is", "am", "are", "be"], correct: "c" },
+            { question: "Which of these words is used to link two ideas?", answers: ["but", "dog", "jump", "cat"], correct: "a" },
+            { question: "What day comes after Wednesday?", answers: ["Monday", "Friday", "Saturday", "Thursday"], correct: "d" },
+            { question: "What is the verb form for 'they' in the Simple Present?", answers: ["they is", "they are", "they am", "they be"], correct: "b" },
+            { question: "Which linking word shows a cause?", answers: ["but", "and", "because", "so"], correct: "c" },
+            { question: "What day comes before Friday?", answers: ["Thursday", "Saturday", "Sunday", "Wednesday"], correct: "a" },
+            { question: "What is the correct form of 'to be' in the question: 'Are you okay?'", answers: ["am", "is", "are", "be"], correct: "c" },
+            { question: "What is the present continuous of 'I study'?", answers: ["I studied", "I studying", "I am study", "I am studying"], correct: "d" },
+            { question: "What is the day after Tuesday?", answers: ["Monday", "Friday", "Saturday", "Wednesday"], correct: "d" },
+            { question: "Which linking word is used to add ideas?", answers: ["and", "but", "because", "so"], correct: "a" },
+            { question: "Which of these is the correct Simple Present form of 'she'?", answers: ["she run", "she runs", "she running", "she is run"], correct: "b" },
+            { question: "How do you form the Present Continuous of 'he speak'?", answers: ["he is speak", "he is speaking", "he speak", "he speaks"], correct: "b" },
+            { question: "What is the correct verb form for 'they'?", answers: ["they is", "they are", "they am", "they be"], correct: "b" },
+            { question: "What is the verb form of 'I' in the Simple Present?", answers: ["I is", "I am", "I are", "I be"], correct: "b" },
+            { question: "What verb do you use for 'he' in the Simple Present?", answers: ["he is", "he am", "he are", "he be"], correct: "a" },
+            { question: "Which linking word shows the result of something?", answers: ["but", "and", "because", "so"], correct: "d" },
+            { question: "What day is before Sunday?", answers: ["Friday", "Saturday", "Monday", "Saturday"], correct: "b" },
+            { question: "What verb is used with 'they' in the Simple Present?", answers: ["they is", "they are", "they am", "they be"], correct: "b" },
+            { question: "What is the verb form of 'she' in the Simple Present?", answers: ["she is", "she am", "she are", "she be"], correct: "a" },
+            { question: "What day comes after Sunday?", answers: ["Monday", "Tuesday", "Saturday", "Friday"], correct: "a" },
+            { question: "What is the correct form of 'to be' in the question: 'Are you okay?'", answers: ["am", "is", "are", "be"], correct: "c" },
+            { question: "What is the present continuous form of 'I work'?", answers: ["I am work", "I am working", "I work", "I works"], correct: "b" },
+            { question: "What is the correct day of the week?", answers: ["Sunday", "Monday", "Friday", "Thursday"], correct: "c" }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+
+        function showQuestion() {
+            const questionData = questions[currentQuestion];
+            document.getElementById('question').innerText = questionData.question;
+            const buttons = document.querySelectorAll('.answers button');
+            buttons[0].innerText = questionData.answers[0];
+            buttons[1].innerText = questionData.answers[1];
+            buttons[2].innerText = questionData.answers[2];
+            buttons[3].innerText = questionData.answers[3];
+        }
+
+        function checkAnswer(selected) {
+            const questionData = questions[currentQuestion];
+            const result = document.getElementById('result');
+            
+            if (selected === questionData.correct) {
+                result.innerHTML = 'Você acertou! 🎉';
+                score++;
+            } else {
+                result.innerHTML = 'Você errou! Tente novamente. 😞';
+            }
+
+            document.getElementById('next-button').style.display = 'block';
+        }
+
+        function nextQuestion() {
+            currentQuestion++;
+
+            if (currentQuestion < questions.length) {
+                showQuestion();
+                document.getElementById('result').innerHTML = '';
+                document.getElementById('next-button').style.display = 'none';
+            } else {
+                document.getElementById('result').innerHTML = `Fim do quiz! Seu score é: ${score} de ${questions.length}`;
+                document.getElementById('next-button').style.display = 'none';
+            }
+        }
+
+        showQuestion();
+    </script>
+
+</body>
+</html>

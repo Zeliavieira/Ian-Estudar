@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz de Ciências e Universo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        #quiz {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+        .question {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        .options button {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .options button:hover {
+            background-color: #45a049;
+        }
+        #result {
+            text-align: center;
+            font-size: 20px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div id="quiz"></div>
+<div id="result"></div>
+
+<script>
+const quizData = [
+    { question: "1. O que é o Sistema Solar?", options: ["O sistema de estrelas", "O sistema de planetas", "O sistema de satélites", "O sistema de luas"], answer: 1 },
+    { question: "2. Qual é o planeta mais próximo do Sol?", options: ["Vênus", "Mercúrio", "Terra", "Marte"], answer: 1 },
+    { question: "3. O que é uma estrela?", options: ["Um planeta em rotação", "Uma esfera de gás em combustão", "Uma lua em movimento", "Um cometa"], answer: 1 },
+    { question: "4. Qual é a estrela mais próxima da Terra?", options: ["Sirius", "Betelgeuse", "Sol", "Alpha Centauri"], answer: 2 },
+    { question: "5. O que é uma galáxia?", options: ["Um conjunto de estrelas e planetas", "Uma estrela que brilha muito", "Uma lua em movimento", "Um planeta em rotação"], answer: 0 },
+    { question: "6. O que é o Big Bang?", options: ["A criação do universo", "A criação das estrelas", "A criação dos planetas", "A formação das luas"], answer: 0 },
+    { question: "7. Qual é o planeta vermelho?", options: ["Marte", "Júpiter", "Vênus", "Saturno"], answer: 0 },
+    { question: "8. Qual é o maior planeta do Sistema Solar?", options: ["Júpiter", "Saturno", "Terra", "Netuno"], answer: 0 },
+    { question: "9. O que é uma lua?", options: ["Uma estrela", "Uma rocha flutuante", "Um satélite natural de um planeta", "Um cometa"], answer: 2 },
+    { question: "10. O que é um buraco negro?", options: ["Uma estrela que desapareceu", "Uma região do espaço com intensa gravidade", "Uma lua que colidiu com o Sol", "Uma estrela cadente"], answer: 1 },
+    { question: "11. O que é uma supernova?", options: ["Uma estrela que se explode no final de sua vida", "Uma estrela que nasce", "Uma estrela em rotação", "Uma estrela apagada"], answer: 0 },
+    { question: "12. O que é a Via Láctea?", options: ["A galáxia onde está o Sistema Solar", "Uma estrela muito brilhante", "Um planeta em movimento", "Um cometa"], answer: 0 },
+    { question: "13. O que é um cometa?", options: ["Uma estrela em explosão", "Um corpo celeste com uma cauda", "Um planeta em movimento", "Uma lua em órbita"], answer: 1 },
+    { question: "14. Qual é o planeta mais distante do Sol?", options: ["Plutão", "Netuno", "Urano", "Saturno"], answer: 1 },
+    { question: "15. O que é a órbita de um planeta?", options: ["A trajetória de um planeta ao redor do Sol", "O movimento de rotação da Terra", "O movimento de uma lua", "O caminho de um cometa"], answer: 0 },
+    { question: "16. O que é o cinturão de asteroides?", options: ["Uma faixa de asteroides entre Marte e Júpiter", "Uma lua gigante", "Uma galáxia", "Uma estrela cadente"], answer: 0 },
+    { question: "17. O que é um exoplaneta?", options: ["Um planeta fora do nosso Sistema Solar", "Um planeta dentro do Sistema Solar", "Um planeta com anéis", "Uma estrela em formação"], answer: 0 },
+    { question: "18. Qual é a principal composição do Sol?", options: ["Hidrogênio e hélio", "Oxigênio e carbono", "Água e metais", "Gás e poeira"], answer: 0 },
+    { question: "19. O que é a gravidade?", options: ["A força que mantém os planetas em movimento", "A força que atrai objetos para o centro da Terra", "A rotação da Terra sobre seu eixo", "O movimento das estrelas"], answer: 1 },
+    { question: "20. O que são as galáxias espirais?", options: ["Galáxias com buracos negros", "Galáxias formadas por estrelas e planetas", "Galáxias em forma de espiral", "Galáxias muito pequenas"], answer: 2 },
+    { question: "21. O que é um meteoro?", options: ["Uma estrela", "Uma rocha que cai na Terra", "Uma lua", "Um planeta"], answer: 1 },
+    { question: "22. O que é uma estrela gigante?", options: ["Uma estrela que não brilha", "Uma estrela pequena", "Uma estrela em expansão", "Uma estrela com buraco negro"], answer: 2 },
+    { question: "23. Qual é o maior planeta do Sistema Solar?", options: ["Júpiter", "Saturno", "Marte", "Vênus"], answer: 0 },
+    { question: "24. O que é o campo gravitacional?", options: ["A força que atrai os corpos para o centro da Terra", "A gravidade entre as estrelas", "A atração dos planetas", "A força que puxa as luas"], answer: 0 },
+    { question: "25. O que acontece quando a Terra gira?", options: ["A Terra fica maior", "O dia e a noite acontecem", "A Terra muda de cor", "Os planetas mudam de posição"], answer: 1 },
+    { question: "26. O que é a teoria do Big Bang?", options: ["A teoria da evolução das estrelas", "A teoria que explica o surgimento do universo", "A teoria que explica o movimento dos planetas", "A teoria dos buracos negros"], answer: 1 },
+    { question: "27. O que são planetas rochosos?", options: ["Planetas com anéis", "Planetas sem órbita", "Planetas feitos de rocha e metal", "Planetas com atmosfera"], answer: 2 },
+    { question: "28. O que é uma estrela cadente?", options: ["Uma estrela que morre", "Um cometa", "Um meteoro queimando na atmosfera", "Uma lua em movimento"], answer: 2 },
+    { question: "29. Qual é o maior planeta do Sistema Solar?", options: ["Júpiter", "Saturno", "Marte", "Vênus"], answer: 0 },
+    { question: "30. O que é a órbita de um planeta?", options: ["O caminho de um planeta", "A rotação de uma estrela", "O movimento de um cometa", "A trajetória de uma lua"], answer: 0 },
+    { question: "31. O que é o Sol?", options: ["Uma estrela", "Um planeta", "Uma lua", "Uma galáxia"], answer: 0 },
+    { question: "32. O que são planetas rochosos?", options: ["Planetas com atmosfera", "Planetas feitos de rocha e metal", "Planetas com anéis", "Planetas sem órbita"], answer: 1 },
+    { question: "33. Qual é a maior estrela conhecida?", options: ["Betelgeuse", "Sol", "Vega", "Sirius"], answer: 0 },
+    { question: "34. O que é a teoria do Big Bang?", options: ["A teoria que explica o movimento dos planetas", "A teoria que explica o surgimento do universo", "A teoria da evolução das estrelas", "A teoria dos buracos negros"], answer: 1 },
+    { question: "35. Qual é a forma da Terra?", options: ["Esférica", "Cilíndrica", "Plano", "Cúbica"], answer: 0 },
+    { question: "36. O que é uma estrela cadente?", options: ["Uma estrela que morre", "Um cometa", "Um meteoro queimando na atmosfera", "Uma lua em movimento"], answer: 2 },
+    { question: "37. O que é uma órbita?", options: ["O caminho de um planeta", "A rotação de uma estrela", "O movimento de um cometa", "A trajetória de uma lua"], answer: 0 },
+    { question: "38. O que é um exoplaneta?", options: ["Um planeta fora do nosso Sistema Solar", "Um planeta dentro do Sistema Solar", "Um planeta gigante", "Uma estrela em formação"], answer: 0 },
+    { question: "39. Qual é o maior planeta do Sistema Solar?", options: ["Júpiter", "Saturno", "Marte", "Vênus"], answer: 0 },
+    { question: "40. O que é o movimento de rotação da Terra?", options: ["A rotação da Terra em torno do Sol", "A rotação da Terra sobre seu eixo", "A órbita dos planetas", "O movimento das estrelas"], answer: 1 },
+    { question: "41. O que é uma estrela gigante?", options: ["Uma estrela pequena", "Uma estrela em expansão", "Uma estrela que não brilha", "Uma estrela com buraco negro"], answer: 1 },
+    { question: "42. O que é um meteoro?", options: ["Uma estrela", "Uma rocha que cai na Terra", "Uma lua", "Um planeta"], answer: 1 },
+    { question: "43. O que é o campo gravitacional?", options: ["A atração dos planetas", "A força que atrai os corpos para o centro da Terra", "A gravidade entre as estrelas", "A força que puxa as luas"], answer: 1 },
+    { question: "44. Qual é a principal composição do Sol?", options: ["Gás e poeira", "Água e metais", "Hidrogênio e hélio", "Oxigênio e carbono"], answer: 2 },
+    { question: "45. O que são as galáxias espirais?", options: ["Galáxias formadas por estrelas e planetas", "Galáxias em forma de espiral", "Galáxias com buracos negros", "Galáxias muito pequenas"], answer: 1 },
+    { question: "46. O que é um cinturão de asteroides?", options: ["Uma faixa de asteroides entre Marte e Júpiter", "Uma região com estrelas", "Uma galáxia", "Uma lua gigante"], answer: 0 },
+    { question: "47. O que é o Big Bang?", options: ["A teoria do início do universo", "A teoria da morte das estrelas", "O nascimento dos planetas", "A expansão do sistema solar"], answer: 0 },
+    { question: "48. Qual é o tamanho do Sol comparado à Terra?", options: ["É menor que a Terra", "Tem o mesmo tamanho", "É muito maior que a Terra", "É do tamanho de um planeta"], answer: 2 },
+    { question: "49. Como as estrelas se formam?", options: ["Através de explosões", "De gases e poeira no espaço", "De buracos negros", "Da colisão de planetas"], answer: 1 },
+    { question: "50. O que acontece quando a Terra gira?", options: ["A Terra fica maior", "A Terra muda de cor", "O dia e a noite acontecem", "Os planetas mudam de posição"], answer: 2 }
+];
+
+let currentQuestion = 0;
+let score = 0;
+
+function loadQuestion() {
+    if (currentQuestion < quizData.length) {
+        let quiz = document.getElementById("quiz");
+        quiz.innerHTML = `
+        <div class="question">${quizData[currentQuestion].question}</div>
+        <div class="options">
+            ${quizData[currentQuestion].options.map((option, index) => `
+                <button onclick="checkAnswer(${index})">${option}</button>
+            `).join('')}
+        </div>`;
+    } else {
+        showResult();
+    }
+}
+
+function checkAnswer(selectedIndex) {
+    if (selectedIndex === quizData[currentQuestion].answer) {
+        score++;
+    }
+    currentQuestion++;
+    loadQuestion();
+}
+
+function showResult() {
+    let result = document.getElementById("result");
+    result.innerHTML = `Você acertou ${score} de ${quizData.length} perguntas!`;
+}
+
+loadQuestion();
+</script>
+
+</body>
+</html>

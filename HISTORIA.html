@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz de História</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+        }
+        .quiz-container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .question {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        .options {
+            list-style: none;
+            padding: 0;
+        }
+        .options li {
+            background-color: #007BFF;
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            color: white;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        .options li:hover {
+            background-color: #0056b3;
+        }
+        .result {
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+        .correct {
+            color: green;
+        }
+        .incorrect {
+            color: red;
+        }
+        .confetti {
+            display: none;
+            color: gold;
+            font-size: 30px;
+            margin-top: 20px;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="quiz-container">
+    <h1>Quiz de História</h1>
+    <div class="question" id="question"></div>
+    <ul class="options" id="options"></ul>
+    <div class="result hidden" id="result"></div>
+    <div class="confetti" id="confetti">🎉 Confetes! 🎉</div>
+    <button onclick="nextQuestion()" id="next-button" class="hidden">Próxima Pergunta</button>
+</div>
+
+<script>
+    const quizData = [
+        { question: "O que causou a Primeira Guerra Mundial?", options: ["Assassinato de Franz Ferdinand", "Revolução Russa", "Ascensão do Nazismo", "Crise Capitalista"], answer: "Assassinato de Franz Ferdinand" },
+        { question: "Qual evento marcou o início da Revolução Russa?", options: ["Queda do Império Russo", "Ascensão de Stalin", "Revolta dos Trabalhadores", "Assassinato de Rasputin"], answer: "Queda do Império Russo" },
+        { question: "Quem foi o líder da Revolução Russa de 1917?", options: ["Vladimir Lenin", "Joseph Stalin", "Leon Trotsky", "Nikita Khrushchev"], answer: "Vladimir Lenin" },
+        { question: "Qual o ano em que a Primeira República Brasileira foi proclamada?", options: ["1889", "1900", "1930", "1945"], answer: "1889" },
+        { question: "A Revolução Russa teve como um dos objetivos principais:", options: ["Acabar com a monarquia", "Estabelecer o regime capitalista", "Impor a ditadura militar", "Promover o retorno à monarquia"], answer: "Acabar com a monarquia" },
+        { question: "Quem foi o imperador do Brasil durante o período da Proclamação da República?", options: ["Dom Pedro II", "Dom João VI", "Dom Pedro I", "Princesa Isabel"], answer: "Dom Pedro II" },
+        { question: "Qual país foi responsável pela queda do muro de Berlim?", options: ["Alemanha", "Estados Unidos", "França", "Rússia"], answer: "Alemanha" },
+        { question: "Quem foi o líder da Revolução Francesa?", options: ["Maximilien Robespierre", "Napoleão Bonaparte", "Louis XVI", "Georges Danton"], answer: "Maximilien Robespierre" },
+        { question: "Qual foi o primeiro país a conquistar a independência na América Latina?", options: ["Brasil", "México", "Argentina", "Haiti"], answer: "Haiti" },
+        { question: "Quando ocorreu a assinatura da Carta Magna na Inglaterra?", options: ["1215", "1492", "1642", "1776"], answer: "1215" },
+        { question: "Em que ano aconteceu a queda do Império Romano?", options: ["476 d.C.", "1492", "476 a.C.", "200 d.C."], answer: "476 d.C." },
+        { question: "Quem foi o responsável por unificar a Alemanha no século XIX?", options: ["Otto von Bismarck", "Napoleão Bonaparte", "Adolf Hitler", "Willy Brandt"], answer: "Otto von Bismarck" },
+        { question: "Qual foi o principal motivo da Grande Depressão de 1929?", options: ["Quebra da bolsa de valores de Nova York", "Primeira Guerra Mundial", "Ascensão do fascismo", "Abolição da escravidão"], answer: "Quebra da bolsa de valores de Nova York" },
+        { question: "O que foi a Guerra Fria?", options: ["Conflito entre os EUA e a União Soviética", "Guerra entre França e Alemanha", "Conflito interno na China", "Guerra contra o Japão"], answer: "Conflito entre os EUA e a União Soviética" },
+        { question: "Quem foi o responsável pela descoberta da América em 1492?", options: ["Cristóvão Colombo", "Vasco da Gama", "Ferdinando Magalhães", "Pedro Álvares Cabral"], answer: "Cristóvão Colombo" },
+        { question: "Em que ano aconteceu a Revolução Francesa?", options: ["1789", "1492", "1600", "1815"], answer: "1789" },
+        { question: "Quem foi o líder militar na Revolução Mexicana?", options: ["Emiliano Zapata", "Pancho Villa", "Carlos Salinas", "Diego Rivera"], answer: "Pancho Villa" },
+        { question: "A crise de 1929 afetou principalmente qual setor da economia?", options: ["Mercado financeiro", "Indústria automobilística", "Setor agrícola", "Mercado de petróleo"], answer: "Mercado financeiro" },
+        { question: "Qual foi a principal consequência da Segunda Guerra Mundial?", options: ["Divisão da Alemanha", "Revolução Russa", "Queda do Império Austro-Húngaro", "Independência das colônias africanas"], answer: "Divisão da Alemanha" },
+        { question: "Quem foi o líder da resistência francesa durante a Segunda Guerra Mundial?", options: ["Charles de Gaulle", "Winston Churchill", "Adolf Hitler", "Joseph Stalin"], answer: "Charles de Gaulle" },
+        { question: "O que marcou a queda do Império Romano do Ocidente?", options: ["Invasão dos bárbaros", "Ascensão do cristianismo", "Conquista das Cruzadas", "Revolução Industrial"], answer: "Invasão dos bárbaros" },
+        { question: "Em que data os Estados Unidos entraram na Segunda Guerra Mundial?", options: ["7 de dezembro de 1941", "1 de setembro de 1939", "6 de junho de 1944", "30 de maio de 1945"], answer: "7 de dezembro de 1941" },
+        { question: "O que foi a Revolução Industrial?", options: ["Mudança no processo de produção e no uso de máquinas", "Revolta popular contra o feudalismo", "Revolução na educação e na ciência", "Substituição do comércio pelo trabalho artesanal"], answer: "Mudança no processo de produção e no uso de máquinas" }
+    ];
+
+    let currentQuestionIndex = 0;
+
+    function shuffle(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]]; // troca os elementos
+        }
+    }
+
+    function displayQuestion() {
+        const question = quizData[currentQuestionIndex];
+        document.getElementById('question').textContent = question.question;
+
+        const optionsList = document.getElementById('options');
+        optionsList.innerHTML = '';
+
+        // Embaralha as opções
+        shuffle(question.options);
+
+        // Adiciona as opções embaralhadas
+        question.options.forEach(option => {
+            const li = document.createElement('li');
+            li.textContent = option;
+            li.onclick = () => checkAnswer(option);
+            optionsList.appendChild(li);
+        });
+    }
+
+    function checkAnswer(selectedOption) {
+        const question = quizData[currentQuestionIndex];
+        const resultDiv = document.getElementById('result');
+        if (selectedOption === question.answer) {
+            resultDiv.textContent = "Resposta correta!";
+            resultDiv.className = 'result correct';
+            document.getElementById('confetti').style.display = 'block';
+        } else {
+            resultDiv.textContent = "Resposta errada. Tente novamente!";
+            resultDiv.className = 'result incorrect';
+            document.getElementById('confetti').style.display = 'none';
+        }
+        document.getElementById('next-button').classList.remove('hidden');
+    }
+
+    function nextQuestion() {
+        currentQuestionIndex++;
+        if (currentQuestionIndex < quizData.length) {
+            displayQuestion();
+            document.getElementById('result').classList.add('hidden');
+            document.getElementById('confetti').style.display = 'none';
+            document.getElementById('next-button').classList.add('hidden');
+        } else {
+            document.getElementById('result').textContent = "Quiz concluído!";
+            document.getElementById('result').classList.remove('hidden');
+            document.getElementById('next-button').classList.add('hidden');
+        }
+    }
+
+    // Inicializa o quiz
+    displayQuestion();
+</script>
+</body>
+</html>
